@@ -3,7 +3,6 @@ import {
   Users,
   Plus,
   Trash2,
-  UserCheck,
   AlertCircle,
   Crown,
 } from "lucide-react";
@@ -238,7 +237,7 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
 
   const regularPeople = state.people.filter((p) => !p.isExternal);
   const payer = state.people.find((p) => p.id === state.payerId);
-  const hasErrors = fieldErrors.length > 0;
+      // const hasErrors = fieldErrors.length > 0;
 
   return (
     <Card className="w-full">

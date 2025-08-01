@@ -4,11 +4,8 @@ import {
   Plus,
   Trash2,
   DollarSign,
-  Users,
   AlertCircle,
   Check,
-  Calculator,
-  X,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -39,7 +36,7 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
   const [newItemPrice, setNewItemPrice] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  // const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   // Refs for auto-focusing inputs
   const nameInputRef = useRef<HTMLInputElement>(null);

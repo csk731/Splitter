@@ -1,7 +1,6 @@
 import {
   BillState,
   Item,
-  Person,
   PersonTotal,
   SplitwiseOutput,
   UUID,

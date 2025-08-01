@@ -1,5 +1,5 @@
 import { BillState, StoredSplit } from "./types";
-import { createEmptyState, createSampleState } from "./calc";
+import { createEmptyState } from "./calc";
 
 const STORAGE_KEY = "splitter_recent_splits";
 const MAX_STORED_SPLITS = 10;
@@ -246,7 +246,7 @@ export function validateBillState(state: BillState): {
   }
 
   // Check if people exist (allow empty for initial state)
-  const regularPeople = state.people.filter((p) => !p.isExternal);
+  // const regularPeople = state.people.filter((p) => !p.isExternal);
 
   // Check if payer exists
   const payer = state.people.find((p) => p.id === state.payerId);

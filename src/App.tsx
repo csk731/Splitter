@@ -21,10 +21,10 @@ import {
   loadSplitById,
   deleteSplitById,
   clearRecentSplits,
-  StoredSplit,
   validateBillState,
   isStateComplete,
 } from "./lib/storage";
+import { StoredSplit } from "./lib/types";
 
 const WELCOME_DISMISSED_KEY = "splitter_welcome_dismissed";
 const THEME_KEY = "splitter_theme";
@@ -192,7 +192,7 @@ function App() {
   // Check if current state is already saved
   const currentStateString = JSON.stringify(state);
   const isCurrentStateSaved =
-    currentSplitId && currentStateString === lastSavedState;
+    !!currentSplitId && currentStateString === lastSavedState;
 
   const regularPeople = state.people.filter((p) => !p.isExternal);
   const isEmpty = regularPeople.length === 0 && state.items.length === 0;

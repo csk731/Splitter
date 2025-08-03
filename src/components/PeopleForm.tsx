@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Users,
-  Plus,
-  Trash2,
-  AlertCircle,
-  Crown,
-} from "lucide-react";
+import { Users, Plus, Trash2, AlertCircle, Crown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Select } from "./ui/select";
@@ -51,7 +45,10 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
     );
   };
 
-  const addPerson = async () => {
+  const addPerson = () => {
+    // Prevent multiple simultaneous submissions
+    if (isSubmitting) return;
+
     const trimmedName = newPersonName.trim();
 
     removeFieldError(undefined, "newPersonName");
@@ -186,8 +183,10 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
     removeFieldError(undefined, "payer");
 
     if (payerId === "external") {
+      // Find existing external payer
       const externalPayer = state.people.find((p) => p.isExternal);
       if (!externalPayer) {
+        // Create new external payer
         const newExternalPayer: Person = {
           id: generateId(),
           name: "External Payer",
@@ -202,6 +201,7 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
 
         onUpdateState(newState);
       } else {
+        // Use existing external payer
         onUpdateState({ ...state, payerId: externalPayer.id });
       }
     } else if (payerId === "") {
@@ -211,7 +211,29 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
       });
       return;
     } else {
-      const newPeople = state.people.filter((p) => !p.isExternal);
+      // Switching to regular person - validate the payer exists
+      const selectedPerson = state.people.find(
+        (p) => p.id === payerId && !p.isExternal
+      );
+      if (!selectedPerson) {
+        addFieldError({
+          field: "payer",
+          message: "Selected payer is not valid",
+        });
+        return;
+      }
+
+      // Only remove external payers if they're not involved in any items
+      const externalPeople = state.people.filter((p) => p.isExternal);
+      const externalInvolvedInItems = externalPeople.some((external) =>
+        state.items.some((item) => item.consumerIds.includes(external.id))
+      );
+
+      let newPeople = state.people;
+      if (!externalInvolvedInItems) {
+        // Safe to remove external payers since they're not consumers
+        newPeople = state.people.filter((p) => !p.isExternal);
+      }
 
       onUpdateState({
         ...state,
@@ -237,7 +259,7 @@ export function PeopleForm({ state, onUpdateState }: PeopleFormProps) {
 
   const regularPeople = state.people.filter((p) => !p.isExternal);
   const payer = state.people.find((p) => p.id === state.payerId);
-      // const hasErrors = fieldErrors.length > 0;
+  // const hasErrors = fieldErrors.length > 0;
 
   return (
     <Card className="w-full">

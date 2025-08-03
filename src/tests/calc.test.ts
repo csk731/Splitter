@@ -10,7 +10,7 @@ import {
   generateId,
   generateSplitwiseText,
 } from "../lib/calc";
-import { validateBillState } from "../lib/storage";
+import { validateBillState, isStateComplete } from "../lib/storage";
 import { BillState, Item } from "../lib/types";
 
 describe("Utility Functions", () => {
@@ -436,12 +436,16 @@ describe("State Validation Tests", () => {
       items: [{ id: "i1", name: "Item", price: 10, consumerIds: [] }],
     };
 
+    // validateBillState allows incomplete states for editing
     const validation = validateBillState(state);
+    expect(validation.isValid).toBe(true);
 
-    expect(validation.isValid).toBe(false);
+    // isStateComplete should catch missing consumers
+    const completeness = isStateComplete(state);
+    expect(completeness.isComplete).toBe(false);
     expect(
-      validation.errors.some((e) =>
-        e.includes("must have at least one consumer")
+      completeness.warnings.some((w) =>
+        w.includes("needs at least one consumer")
       )
     ).toBe(true);
   });

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   Moon,
   Sun,
@@ -56,9 +56,21 @@ function App() {
   });
   const [justSaved, setJustSaved] = useState(false);
 
+  // Ref to track timeout for cleanup
+  const justSavedTimeoutRef = useRef<number | null>(null);
+
   // Load recent splits on mount
   useEffect(() => {
     setRecentSplits(loadRecentSplits());
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (justSavedTimeoutRef.current) {
+        clearTimeout(justSavedTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Apply theme to document and save to localStorage
@@ -127,7 +139,14 @@ function App() {
         setLastSavedState(currentStateString);
 
         setJustSaved(true);
-        setTimeout(() => setJustSaved(false), 2000);
+        // Clear any existing timeout before setting a new one
+        if (justSavedTimeoutRef.current) {
+          clearTimeout(justSavedTimeoutRef.current);
+        }
+        justSavedTimeoutRef.current = setTimeout(
+          () => setJustSaved(false),
+          2000
+        );
       }
     } catch (error) {
       console.error("Failed to save split:", error);
@@ -309,79 +328,79 @@ function App() {
         {/* Recent Splits Dropdown */}
         {showRecentSplits && (
           <div className="absolute top-full right-4 w-80 bg-card border rounded-lg shadow-lg z-50 max-h-96 overflow-hidden mt-1">
-          <div className="p-4 border-b">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium">Recent Splits</h3>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleNewSplit}
-                  title="New Split"
-                >
-                  <FileText className="h-4 w-4" />
-                </Button>
-                {recentSplits.length > 0 && (
+            <div className="p-4 border-b">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium">Recent Splits</h3>
+                <div className="flex gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={handleClearAllSplits}
-                    title="Clear All"
+                    onClick={handleNewSplit}
+                    title="New Split"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <FileText className="h-4 w-4" />
                   </Button>
-                )}
+                  {recentSplits.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearAllSplits}
+                      title="Clear All"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="max-h-64 overflow-y-auto">
-            {recentSplits.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
-                <History className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No recent splits</p>
-                <p className="text-xs">Save splits to see them here</p>
-              </div>
-            ) : (
-              recentSplits.map((split) => (
-                <div
-                  key={split.id}
-                  className={`p-3 border-b last:border-b-0 hover:bg-accent/50 cursor-pointer flex items-center justify-between group ${
-                    split.id === currentSplitId
-                      ? "bg-primary/10 border-primary/20"
-                      : ""
-                  }`}
-                  onClick={() => handleLoadRecentSplit(split.id)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium truncate">
-                        {split.name}
-                      </p>
-                      {split.id === currentSplitId && (
-                        <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
-                          Current
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(split.timestamp).toLocaleString()}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => handleDeleteSplit(split.id, e)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="Delete"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
+            <div className="max-h-64 overflow-y-auto">
+              {recentSplits.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  <History className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No recent splits</p>
+                  <p className="text-xs">Save splits to see them here</p>
                 </div>
-              ))
-            )}
+              ) : (
+                recentSplits.map((split) => (
+                  <div
+                    key={split.id}
+                    className={`p-3 border-b last:border-b-0 hover:bg-accent/50 cursor-pointer flex items-center justify-between group ${
+                      split.id === currentSplitId
+                        ? "bg-primary/10 border-primary/20"
+                        : ""
+                    }`}
+                    onClick={() => handleLoadRecentSplit(split.id)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium truncate">
+                          {split.name}
+                        </p>
+                        {split.id === currentSplitId && (
+                          <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
+                            Current
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(split.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleDeleteSplit(split.id, e)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
         )}
       </header>
 

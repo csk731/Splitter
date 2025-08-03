@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Copy, Check, FileText } from "lucide-react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -24,20 +24,44 @@ export function SplitwiseInstructions({ state }: SplitwiseInstructionsProps) {
   const splitwiseOutput = buildSplitwiseShares(state);
   const instructionText = generateSplitwiseText(splitwiseOutput);
 
+  // Refs to track timeout IDs for cleanup
+  const copiedTimeoutRef = useRef<number | null>(null);
+  const errorTimeoutRef = useRef<number | null>(null);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current) {
+        clearTimeout(copiedTimeoutRef.current);
+      }
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleCopy = async () => {
+    // Clear any existing timeouts
+    if (copiedTimeoutRef.current) {
+      clearTimeout(copiedTimeoutRef.current);
+    }
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+
     try {
       const success = await copyToClipboard(instructionText);
       if (success) {
         setCopied(true);
         setCopyError(false);
-        setTimeout(() => setCopied(false), 2000);
+        copiedTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
       } else {
         setCopyError(true);
-        setTimeout(() => setCopyError(false), 2000);
+        errorTimeoutRef.current = setTimeout(() => setCopyError(false), 2000);
       }
     } catch (error) {
       setCopyError(true);
-      setTimeout(() => setCopyError(false), 2000);
+      errorTimeoutRef.current = setTimeout(() => setCopyError(false), 2000);
     }
   };
 

@@ -1,5 +1,19 @@
 import { BillState, StoredSplit } from "./types";
-import { createEmptyState } from "./calc";
+import { createEmptyState, generateId } from "./calc";
+
+/**
+ * Deep copy a BillState to avoid reference issues
+ */
+function deepCopyBillState(state: BillState): BillState {
+  return {
+    ...state,
+    people: state.people.map((person) => ({ ...person })),
+    items: state.items.map((item) => ({
+      ...item,
+      consumerIds: [...item.consumerIds],
+    })),
+  };
+}
 
 const STORAGE_KEY = "splitter_recent_splits";
 const MAX_STORED_SPLITS = 10;
@@ -96,30 +110,29 @@ export function saveToRecentSplits(
         // Update the existing split
         currentSplits[existingIndex] = {
           ...currentSplits[existingIndex],
-          state: { ...state }, // Deep copy to avoid reference issues
+          state: deepCopyBillState(state), // Deep copy to avoid reference issues
           name: generateSplitName(state),
           timestamp: Date.now(), // Update timestamp to show it was recently modified
         };
         splitId = existingSplitId;
       } else {
         // Split not found, create new one
-        splitId =
-          Date.now().toString() + Math.random().toString(36).substring(2);
+        splitId = generateId();
         const newSplit: StoredSplit = {
           id: splitId,
           timestamp: Date.now(),
-          state: { ...state },
+          state: deepCopyBillState(state),
           name: generateSplitName(state),
         };
         currentSplits.unshift(newSplit);
       }
     } else {
       // Create new split
-      splitId = Date.now().toString() + Math.random().toString(36).substring(2);
+      splitId = generateId();
       const newSplit: StoredSplit = {
         id: splitId,
         timestamp: Date.now(),
-        state: { ...state },
+        state: deepCopyBillState(state),
         name: generateSplitName(state),
       };
       currentSplits.unshift(newSplit);

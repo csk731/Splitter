@@ -1,10 +1,4 @@
-import {
-  BillState,
-  Item,
-  PersonTotal,
-  SplitwiseOutput,
-  UUID,
-} from "./types";
+import { BillState, Item, PersonTotal, SplitwiseOutput, UUID } from "./types";
 
 /**
  * Round to 2 decimal places
@@ -21,10 +15,28 @@ export function round4(n: number): number {
 }
 
 /**
- * Generate a simple UUID
+ * Generate a secure UUID-like identifier
  */
 export function generateId(): UUID {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  // Use crypto.getRandomValues if available (browsers), fallback to Math.random
+  const getRandomValues = () => {
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+      const array = new Uint32Array(2);
+      crypto.getRandomValues(array);
+      return array[0].toString(36) + array[1].toString(36);
+    }
+    // Fallback for environments without crypto API
+    return (
+      Math.random().toString(36).substring(2) +
+      Math.random().toString(36).substring(2)
+    );
+  };
+
+  const timestamp = Date.now().toString(36);
+  const randomPart = getRandomValues();
+  const counter = ((Math.random() * 1000000) | 0).toString(36); // Additional entropy
+
+  return `${timestamp}-${randomPart}-${counter}`;
 }
 
 /**

@@ -42,6 +42,9 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const priceInputRef = useRef<HTMLInputElement>(null);
 
+  // Ref to track focus timeout for cleanup
+  const focusTimeoutRef = useRef<number | null>(null);
+
   const regularPeople = state.people.filter((p) => !p.isExternal);
 
   // Calculate tax allocation for display
@@ -50,11 +53,23 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
 
   // Auto-focus name input when no items exist (for initial focus)
   useEffect(() => {
+    // Clear any existing timeout
+    if (focusTimeoutRef.current) {
+      clearTimeout(focusTimeoutRef.current);
+    }
+
     if (state.items.length === 0 && regularPeople.length > 0) {
-      setTimeout(() => {
+      focusTimeoutRef.current = setTimeout(() => {
         nameInputRef.current?.focus();
       }, 100);
     }
+
+    // Cleanup function
+    return () => {
+      if (focusTimeoutRef.current) {
+        clearTimeout(focusTimeoutRef.current);
+      }
+    };
   }, [state.items.length, regularPeople.length]);
 
   const addFieldError = (error: FieldError) => {
@@ -83,7 +98,10 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
     return Math.round(parsed * 100) / 100;
   };
 
-  const addItem = async () => {
+  const addItem = () => {
+    // Prevent multiple simultaneous submissions
+    if (isSubmitting) return;
+
     const trimmedName = newItemName.trim();
 
     removeFieldError(undefined, "newItemName");
@@ -171,9 +189,12 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
       setNewItemPrice("");
 
       // Auto-focus name input for faster entry
-      setTimeout(() => {
-        nameInputRef.current?.focus();
-      }, 0);
+      // Use requestAnimationFrame instead of setTimeout for better performance
+      requestAnimationFrame(() => {
+        if (nameInputRef.current) {
+          nameInputRef.current.focus();
+        }
+      });
     } catch (err) {
       addFieldError({ field: "newItemName", message: "Failed to add item" });
     } finally {
@@ -375,13 +396,17 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-3 bg-muted/50 rounded-lg">
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-muted-foreground" />
-            <label className="text-sm font-medium whitespace-nowrap">
+            <label
+              htmlFor="tax-input"
+              className="text-sm font-medium whitespace-nowrap"
+            >
               Total Tax:
             </label>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1 min-w-0">
             <div className="w-32">
               <Input
+                id="tax-input"
                 type="number"
                 placeholder="0.00"
                 value={state.overallTax || ""}

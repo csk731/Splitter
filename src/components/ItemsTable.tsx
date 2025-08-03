@@ -51,26 +51,27 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
   const itemTaxes = allocateItemTaxes(state.items, state.overallTax);
   const subtotal = state.items.reduce((sum, item) => sum + item.price, 0);
 
-  // Auto-focus name input when no items exist (for initial focus)
-  useEffect(() => {
-    // Clear any existing timeout
-    if (focusTimeoutRef.current) {
-      clearTimeout(focusTimeoutRef.current);
-    }
-
-    if (state.items.length === 0 && regularPeople.length > 0) {
-      focusTimeoutRef.current = setTimeout(() => {
-        nameInputRef.current?.focus();
-      }, 100);
-    }
-
-    // Cleanup function
-    return () => {
-      if (focusTimeoutRef.current) {
-        clearTimeout(focusTimeoutRef.current);
-      }
-    };
-  }, [state.items.length, regularPeople.length]);
+  // Auto-focus name input when no items exist (for initial focus) - DISABLED
+  // This was causing jarring cursor jumps when adding people
+  // useEffect(() => {
+  //   // Clear any existing timeout
+  //   if (focusTimeoutRef.current) {
+  //     clearTimeout(focusTimeoutRef.current);
+  //   }
+  //
+  //   if (state.items.length === 0 && regularPeople.length > 0) {
+  //     focusTimeoutRef.current = setTimeout(() => {
+  //       nameInputRef.current?.focus();
+  //     }, 100);
+  //   }
+  //
+  //   // Cleanup function
+  //   return () => {
+  //     if (focusTimeoutRef.current) {
+  //       clearTimeout(focusTimeoutRef.current);
+  //     }
+  //   };
+  // }, [state.items.length, regularPeople.length]);
 
   const addFieldError = (error: FieldError) => {
     setFieldErrors((prev) => {

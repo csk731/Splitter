@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   ShoppingCart,
   Plus,
@@ -42,36 +42,13 @@ export function ItemsTable({ state, onUpdateState }: ItemsTableProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const priceInputRef = useRef<HTMLInputElement>(null);
 
-  // Ref to track focus timeout for cleanup
-  const focusTimeoutRef = useRef<number | null>(null);
-
   const regularPeople = state.people.filter((p) => !p.isExternal);
 
   // Calculate tax allocation for display
   const itemTaxes = allocateItemTaxes(state.items, state.overallTax);
   const subtotal = state.items.reduce((sum, item) => sum + item.price, 0);
 
-  // Auto-focus name input when no items exist (for initial focus) - DISABLED
-  // This was causing jarring cursor jumps when adding people
-  // useEffect(() => {
-  //   // Clear any existing timeout
-  //   if (focusTimeoutRef.current) {
-  //     clearTimeout(focusTimeoutRef.current);
-  //   }
-  //
-  //   if (state.items.length === 0 && regularPeople.length > 0) {
-  //     focusTimeoutRef.current = setTimeout(() => {
-  //       nameInputRef.current?.focus();
-  //     }, 100);
-  //   }
-  //
-  //   // Cleanup function
-  //   return () => {
-  //     if (focusTimeoutRef.current) {
-  //       clearTimeout(focusTimeoutRef.current);
-  //     }
-  //   };
-  // }, [state.items.length, regularPeople.length]);
+  // Auto-focus behavior removed to prevent jarring cursor jumps when adding people
 
   const addFieldError = (error: FieldError) => {
     setFieldErrors((prev) => {

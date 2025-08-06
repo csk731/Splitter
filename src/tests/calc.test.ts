@@ -356,7 +356,7 @@ describe("Splitwise Integration - Comprehensive Tests", () => {
     const splitwise = buildSplitwiseShares(state);
     const text = generateSplitwiseText(splitwise);
 
-    expect(text).toContain("How to enter in Splitwise (Splitter)");
+    expect(text).toContain("How to enter in Splitwise (SplitEasy)");
     expect(text).toContain("Total: $");
     expect(text).toContain("Paid by: Dan (payer)");
     expect(text).toContain("Split: Unequal shares (by amount)");

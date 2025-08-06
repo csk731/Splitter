@@ -1,4 +1,4 @@
-# Splitter
+# SplitEasy
 
 Split restaurant bills fairly when everyone ordered different things.
 

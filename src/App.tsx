@@ -1,14 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import {
-  Moon,
-  Sun,
-  Calculator,
-  History,
-  Trash2,
-  FileText,
-  X,
-  Save,
-} from "lucide-react";
+import { Moon, Sun, History, Trash2, FileText, X, Save } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { PeopleForm } from "./components/PeopleForm";
 import { ItemsTable } from "./components/ItemsTable";
@@ -26,8 +17,8 @@ import {
 } from "./lib/storage";
 import { StoredSplit } from "./lib/types";
 
-const WELCOME_DISMISSED_KEY = "splitter_welcome_dismissed";
-const THEME_KEY = "splitter_theme";
+const WELCOME_DISMISSED_KEY = "spliteasy_welcome_dismissed";
+const THEME_KEY = "spliteasy_theme";
 
 function App() {
   const [state, setState] = useState<BillState>(() => createEmptyState());
@@ -224,10 +215,45 @@ function App() {
         <div className="container max-w-full mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Calculator className="h-6 w-6 text-primary" />
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="18"
+                  fill="hsl(120, 25%, 45%)"
+                  stroke="hsl(120, 25%, 35%)"
+                  strokeWidth="2"
+                />
+                <g stroke="white" strokeWidth="2.5" fill="none">
+                  <line x1="20" y1="20" x2="20" y2="10" opacity="0.9" />
+                  <line x1="20" y1="20" x2="28.66" y2="26" opacity="0.9" />
+                  <line x1="20" y1="20" x2="11.34" y2="26" opacity="0.9" />
+                </g>
+                <circle cx="20" cy="10" r="2" fill="white" opacity="0.95" />
+                <circle cx="28.66" cy="26" r="2" fill="white" opacity="0.95" />
+                <circle cx="11.34" cy="26" r="2" fill="white" opacity="0.95" />
+                <circle cx="20" cy="20" r="3" fill="white" opacity="0.9" />
+                <text
+                  x="20"
+                  y="20"
+                  fill="hsl(120, 25%, 45%)"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="4"
+                  fontWeight="bold"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                >
+                  $
+                </text>
+              </svg>
               <div className="flex flex-col">
                 <h1 className="text-xl font-bold">
-                  Splitter
+                  SplitEasy
                   {emojiEnabled && <span className="ml-2">🧮</span>}
                 </h1>
                 {currentSplitId && (
@@ -430,7 +456,19 @@ function App() {
             <div className="w-full">
               <div className="border rounded-lg p-4 bg-card">
                 <h3 className="font-medium text-lg mb-4 flex items-center gap-2">
-                  <Calculator className="h-5 w-5" />
+                  <svg
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                    <path d="m9 14 2 2 4-4" />
+                  </svg>
                   Per-Person Totals
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
@@ -520,9 +558,44 @@ function App() {
               <X className="h-4 w-4" />
             </Button>
 
-            <Calculator className="h-12 w-12 mx-auto mb-4 text-primary" />
+            <svg
+              className="h-12 w-12 mx-auto mb-4"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="20"
+                cy="20"
+                r="18"
+                fill="hsl(120, 25%, 45%)"
+                stroke="hsl(120, 25%, 35%)"
+                strokeWidth="2"
+              />
+              <g stroke="white" strokeWidth="2.5" fill="none">
+                <line x1="20" y1="20" x2="20" y2="10" opacity="0.9" />
+                <line x1="20" y1="20" x2="28.66" y2="26" opacity="0.9" />
+                <line x1="20" y1="20" x2="11.34" y2="26" opacity="0.9" />
+              </g>
+              <circle cx="20" cy="10" r="2" fill="white" opacity="0.95" />
+              <circle cx="28.66" cy="26" r="2" fill="white" opacity="0.95" />
+              <circle cx="11.34" cy="26" r="2" fill="white" opacity="0.95" />
+              <circle cx="20" cy="20" r="3" fill="white" opacity="0.9" />
+              <text
+                x="20"
+                y="20"
+                fill="hsl(120, 25%, 45%)"
+                fontFamily="Arial, sans-serif"
+                fontSize="4"
+                fontWeight="bold"
+                textAnchor="middle"
+                dominantBaseline="central"
+              >
+                $
+              </text>
+            </svg>
             <h2 className="text-lg font-semibold mb-2">
-              Welcome to Splitter{emojiEnabled && " 🧮"}
+              Welcome to SplitEasy{emojiEnabled && " 🧮"}
             </h2>
             <p className="text-muted-foreground text-sm mb-4">
               Split itemized bills fairly with automatic tax allocation and

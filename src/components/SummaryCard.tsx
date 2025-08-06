@@ -1,5 +1,5 @@
 // import React from "react";
-import { Calculator, Users, ShoppingCart } from "lucide-react";
+import { Users, ShoppingCart } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,7 +35,18 @@ export function SummaryCard({ state }: SummaryCardProps) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5" />
+            <svg
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 3v5h5" />
+              <path d="M21 12a9 9 0 0 0-9-9m0 0L3 12m9-9v9" />
+            </svg>
             Summary
           </CardTitle>
           <CardDescription>
@@ -44,7 +55,42 @@ export function SummaryCard({ state }: SummaryCardProps) {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            <Calculator className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <svg
+              className="h-12 w-12 mx-auto mb-3 opacity-50"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="20"
+                cy="20"
+                r="18"
+                fill="hsl(120, 25%, 45%)"
+                stroke="hsl(120, 25%, 35%)"
+                strokeWidth="2"
+              />
+              <g stroke="white" strokeWidth="2.5" fill="none">
+                <line x1="20" y1="20" x2="20" y2="10" opacity="0.9" />
+                <line x1="20" y1="20" x2="28.66" y2="26" opacity="0.9" />
+                <line x1="20" y1="20" x2="11.34" y2="26" opacity="0.9" />
+              </g>
+              <circle cx="20" cy="10" r="2" fill="white" opacity="0.95" />
+              <circle cx="28.66" cy="26" r="2" fill="white" opacity="0.95" />
+              <circle cx="11.34" cy="26" r="2" fill="white" opacity="0.95" />
+              <circle cx="20" cy="20" r="3" fill="white" opacity="0.9" />
+              <text
+                x="20"
+                y="20"
+                fill="hsl(120, 25%, 45%)"
+                fontFamily="Arial, sans-serif"
+                fontSize="4"
+                fontWeight="bold"
+                textAnchor="middle"
+                dominantBaseline="central"
+              >
+                $
+              </text>
+            </svg>
             <p className="font-medium">Summary will appear here</p>
             <p className="text-sm">
               Add items and select consumers to see totals
@@ -59,7 +105,18 @@ export function SummaryCard({ state }: SummaryCardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Calculator className="h-5 w-5" />
+          <svg
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 3v5h5" />
+            <path d="M21 12a9 9 0 0 0-9-9m0 0L3 12m9-9v9" />
+          </svg>
           Summary
         </CardTitle>
         <CardDescription>Bill breakdown and per-person totals</CardDescription>
@@ -83,7 +140,18 @@ export function SummaryCard({ state }: SummaryCardProps) {
           </div>
           <div className="space-y-1">
             <div className="flex items-center justify-center gap-1">
-              <Calculator className="h-4 w-4 text-muted-foreground" />
+              <svg
+                className="h-4 w-4 text-muted-foreground"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
             </div>
             <p className="text-2xl font-bold">
               {formatCurrency(totals.grandTotal)}

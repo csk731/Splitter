@@ -15,7 +15,7 @@ function deepCopyBillState(state: BillState): BillState {
   };
 }
 
-const STORAGE_KEY = "splitter_recent_splits";
+const STORAGE_KEY = "spliteasy_recent_splits";
 const MAX_STORED_SPLITS = 10;
 
 /**

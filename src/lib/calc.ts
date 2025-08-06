@@ -216,7 +216,7 @@ export function buildSplitwiseShares(state: BillState): SplitwiseOutput {
  */
 export function generateSplitwiseText(output: SplitwiseOutput): string {
   const lines = [
-    "How to enter in Splitwise (Splitter)",
+    "How to enter in Splitwise (SplitEasy)",
     "-----------------------------------",
     `Total: $${output.grandTotal.toFixed(2)}`,
     `Paid by: ${output.payerName}`,
